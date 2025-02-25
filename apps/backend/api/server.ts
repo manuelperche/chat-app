@@ -18,5 +18,9 @@ export const createServer = (): Express => {
       return res.json({ ok: true });
     });
 
+  app.get("/ping", (req, res) => {
+    return res.send("pong 🏓");
+  });
+
   return app;
 };
