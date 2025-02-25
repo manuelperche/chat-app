@@ -1,5 +1,5 @@
 {
-  "name": "kitchen-sink",
+  "name": "chat-app",
   "private": true,
   "scripts": {
     "build": "turbo run build",
