@@ -6,3 +6,5 @@ const server = createServer();
 server.listen(port, () => {
   // log(`api running on ${port}`);
 });
+
+module.exports = server;
