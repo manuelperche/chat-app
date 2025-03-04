@@ -7,6 +7,7 @@ import {
   getUserSessionsHandler,
 } from "../controllers/session.controller";
 import { createSessionSchema } from "../schemas/session.schema";
+
 const router: Router = Router();
 
 router.post(

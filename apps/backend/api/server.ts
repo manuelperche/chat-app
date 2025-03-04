@@ -20,7 +20,7 @@ export const createServer = (): Express => {
 
   app.use("/api/users", userRouter);
 
-  app.use("/api/sessions", sessionRouter);
+  // app.use("/api/sessions", sessionRouter);
 
   return app;
 };
