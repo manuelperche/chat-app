@@ -3,6 +3,8 @@ import { json, urlencoded } from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import userRouter from "./routes/user.route";
+import sessionRouter from "./routes/session.route";
+
 export const createServer = (): Express => {
   const app = express();
   app
@@ -17,6 +19,8 @@ export const createServer = (): Express => {
   });
 
   app.use("/api/users", userRouter);
+
+  app.use("/api/sessions", sessionRouter);
 
   return app;
 };
