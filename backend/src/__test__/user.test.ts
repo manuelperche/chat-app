@@ -40,7 +40,7 @@ describe("user", () => {
       it("should return the user payload", async () => {
         const createUserServiceMock = jest
           .spyOn(UserService, "createUser")
-          // @ts-ignore
+          // @ts-expect-error - mockReturnValue is not typed
           .mockReturnValueOnce(userPayload);
 
         const { statusCode, body } = await supertest(app)
@@ -59,7 +59,7 @@ describe("user", () => {
       it("should return a 400", async () => {
         const createUserServiceMock = jest
           .spyOn(UserService, "createUser")
-          // @ts-ignore
+          // @ts-expect-error - mockReturnValue is not typed
           .mockReturnValueOnce(userPayload);
 
         const { statusCode } = await supertest(app)
@@ -94,12 +94,12 @@ describe("user", () => {
       it("should return a signed accessToken & refresh token", async () => {
         jest
           .spyOn(UserService, "validatePassword")
-          // @ts-ignore
+          // @ts-expect-error - mockReturnValue is not typed
           .mockReturnValue(userPayload);
 
         jest
           .spyOn(SessionService, "createSession")
-          // @ts-ignore
+          // @ts-expect-error - mockReturnValue is not typed
           .mockReturnValue(sessionPayload);
 
         const req = {
@@ -118,7 +118,7 @@ describe("user", () => {
           send,
         };
 
-        // @ts-ignore
+        // @ts-expect-error - req and res are not typed
         await createUserSessionHandler(req, res);
 
         expect(send).toHaveBeenCalledWith({

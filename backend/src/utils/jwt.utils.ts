@@ -5,7 +5,7 @@ dotenv.config();
 const privateKey = process.env.PRIVATE_KEY;
 const publicKey = process.env.PUBLIC_KEY;
 
-export function signJwt(object: Object, options?: jwt.SignOptions | undefined) {
+export function signJwt(object: object, options?: jwt.SignOptions | undefined) {
   return jwt.sign(object, privateKey as string, {
     ...(options && options),
     algorithm: "RS256",
@@ -20,11 +20,11 @@ export function verifyJwt(token: string) {
       expired: false,
       decoded,
     };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error(e);
     return {
       valid: false,
-      expired: e.message === "jwt expired",
+      expired: (e as Error).message === "jwt expired",
       decoded: null,
     };
   }

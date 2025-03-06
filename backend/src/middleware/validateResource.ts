@@ -11,8 +11,8 @@ const validate =
         params: req.params,
       });
       next();
-    } catch (e: any) {
-      return res.status(400).send(e.errors);
+    } catch (e: unknown) {
+      return res.status(400).send(e instanceof Error ? e.message : "Unknown error");
     }
   };
 

@@ -7,8 +7,8 @@ export async function createUser(input: UserInput) {
     const user = await UserModel.create(input);
 
     return omit(user.toJSON(), "password");
-  } catch (e: any) {
-    throw new Error(e);
+  } catch (e: unknown) {
+    throw new Error(e instanceof Error ? e.message : "Unknown error");
   }
 }
 

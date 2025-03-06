@@ -8,7 +8,7 @@
     "build": "tsup",
     "clean": "rm -rf dist",
     "typecheck": "tsc -b",
-    "lint": "eslint api/",
+    "lint": "eslint src/",
     "test": "jest --detectOpenHandles"
   },
   "dependencies": {
