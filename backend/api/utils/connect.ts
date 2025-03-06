@@ -4,6 +4,8 @@ import logger from "./logger";
 async function connect() {
   const dbUri = process.env.MONGODB_URI;
 
+  console.log('dbUri', dbUri);
+
   if (!dbUri) {
     throw new Error("no MongoDB URI provided");
   }
