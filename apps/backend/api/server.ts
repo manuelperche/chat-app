@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import userRouter from "./routes/user.route";
 import sessionRouter from "./routes/session.route";
+import cookieParser from "cookie-parser";
 
 export const createServer = (): Express => {
   const app = express();
@@ -12,7 +13,8 @@ export const createServer = (): Express => {
     .use(morgan("dev"))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors());
+    .use(cors())
+    .use(cookieParser());
 
   app.get("/ping", (_, res) => {
     res.send("pong 🏓");
@@ -20,7 +22,7 @@ export const createServer = (): Express => {
 
   app.use("/api/users", userRouter);
 
-  // app.use("/api/sessions", sessionRouter);
+  app.use("/api/sessions", sessionRouter);
 
   return app;
 };
