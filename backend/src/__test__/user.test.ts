@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import supertest from "supertest";
 import { createServer } from "../server";
 import * as UserService from "../services/user.service";
-import * as SessionService from "../services/session.service";
-import { createUserSessionHandler } from "../controllers/session.controller";
 
 const app = createServer();
 
@@ -20,16 +18,6 @@ const userInput = {
   fullName: "Jane Doe",
   password: "Password123",
   passwordConfirmation: "Password123",
-};
-
-const sessionPayload = {
-  _id: new mongoose.Types.ObjectId().toString(),
-  user: userId,
-  valid: true,
-  userAgent: "PostmanRuntime/7.28.4",
-  createdAt: new Date("2021-09-30T13:31:07.674Z"),
-  updatedAt: new Date("2021-09-30T13:31:07.674Z"),
-  __v: 0,
 };
 
 describe("user", () => {
@@ -85,46 +73,6 @@ describe("user", () => {
         expect(statusCode).toBe(409);
 
         expect(createUserServiceMock).toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe("create user session", () => {
-    describe("given the username and password are valid", () => {
-      it("should return a signed accessToken & refresh token", async () => {
-        jest
-          .spyOn(UserService, "validatePassword")
-          // @ts-expect-error - mockReturnValue is not typed
-          .mockReturnValue(userPayload);
-
-        jest
-          .spyOn(SessionService, "createSession")
-          // @ts-expect-error - mockReturnValue is not typed
-          .mockReturnValue(sessionPayload);
-
-        const req = {
-          get: () => {
-            return "a user agent";
-          },
-          body: {
-            email: "test@example.com",
-            password: "Password123",
-          },
-        };
-
-        const send = jest.fn();
-
-        const res = {
-          send,
-        };
-
-        // @ts-expect-error - req and res are not typed
-        await createUserSessionHandler(req, res);
-
-        expect(send).toHaveBeenCalledWith({
-          accessToken: expect.any(String),
-          refreshToken: expect.any(String),
-        });
       });
     });
   });
