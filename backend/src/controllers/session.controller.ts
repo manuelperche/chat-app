@@ -11,7 +11,7 @@ import { SignOptions } from "jsonwebtoken";
 const accessTokenTtl = process.env.ACCESS_TOKEN_TTL;
 const refreshTokenTtl = process.env.REFRESH_TOKEN_TTL;
 
-export async function createUserSessionHandler(req: Request, res: Response) {
+export async function login(req: Request, res: Response) {
   // Validate the user's password
   const user = await validatePassword(req.body);
 
@@ -25,18 +25,13 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     req.get("user-agent") || ""
   );
 
-  // create an access token
-
   const accessToken = signJwt({ ...user, session: session._id }, {
     expiresIn: accessTokenTtl,
   } as SignOptions);
 
-  // create a refresh token
   const refreshToken = signJwt({ ...user, session: session._id }, {
     expiresIn: refreshTokenTtl,
   } as SignOptions);
-
-  // return access & refresh tokens
 
   res.cookie("accessToken", accessToken, {
     maxAge: 900000, // 15 mins
@@ -56,7 +51,7 @@ export async function createUserSessionHandler(req: Request, res: Response) {
     secure: false,
   });
 
-  return res.send({ accessToken, refreshToken });
+  return res.send({ user });
 }
 
 export async function getUserSessionsHandler(req: Request, res: Response) {
@@ -72,8 +67,15 @@ export async function deleteSessionHandler(req: Request, res: Response) {
 
   await updateSession({ _id: sessionId }, { valid: false });
 
-  return res.send({
-    accessToken: null,
-    refreshToken: null,
+  res.cookie("accessToken", "", {
+    maxAge: 0,
+    httpOnly: true,
   });
+
+  res.cookie("refreshToken", "", {
+    maxAge: 0,
+    httpOnly: true,
+  });
+
+  return res.sendStatus(204);
 }

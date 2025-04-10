@@ -1,18 +1,18 @@
 import { Link } from "react-router";
-import { Lock, Mail } from "lucide-react";
+import { Loader2, Lock, Mail } from "lucide-react";
 import AuthImagePattern from "../ui/AuthImagePatter";
 import { useForm } from "react-hook-form";
 import FormField from "../components/FormField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthLogo from "../ui/AuthLogo";
+import { useNavigate } from "react-router";
+import { useAuthStore } from "../store/useAuthStore";
+import { LoginFormData } from "../types";
 
 const LoginPage = () => {
-  type FormData = {
-    email: string;
-    password: string;
-  };
-
+  const { login, isLoggingIn } = useAuthStore();
+  const navigate = useNavigate();
   const schema = z.object({
     email: z.string().email(),
     password: z
@@ -25,12 +25,17 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<LoginFormData>({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await login(data);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -63,16 +68,16 @@ const LoginPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              // disabled={isLoggingIn}
+              disabled={isLoggingIn}
             >
-              {/* {isLoggingIn ? (
+              {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
                 </>
-              ) : ( */}
-              Sign in
-              {/* )} */}
+              ) : (
+                "Sign in"
+              )}
             </button>
           </form>
 

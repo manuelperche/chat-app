@@ -9,3 +9,7 @@ export type FormFieldProps<T extends FieldValues> = {
     error?: FieldError | undefined;
     icon: React.ReactNode;
 };
+export type LoginFormData = {
+    email: string;
+    password: string;
+  }

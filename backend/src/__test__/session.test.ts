@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import * as SessionService from "../services/session.service";
 import Session from "../models/session.model";
-import * as UserService from "../services/user.service"; 
-import { createUserSessionHandler } from "../controllers/session.controller";
+import * as UserService from "../services/user.service";
+import { login } from "../controllers/session.controller";
 
 // Mock the Session model
 jest.mock("../models/session.model");
@@ -62,13 +62,13 @@ describe("Session Service", () => {
         };
 
         // @ts-expect-error - req and res are not typed
-        await createUserSessionHandler(req, res);
+        await login(req, res);
 
         expect(cookie).toHaveBeenCalledTimes(2);
-        
+
         expect(cookie.mock.calls[0][0]).toBe("accessToken");
         expect(cookie.mock.calls[0][1]).toEqual(expect.any(String));
-        
+
         expect(cookie.mock.calls[1][0]).toBe("refreshToken");
         expect(cookie.mock.calls[1][1]).toEqual(expect.any(String));
 
@@ -85,7 +85,7 @@ describe("Session Service", () => {
       // Mock the Session.find method with chained lean method
       const mockLean = jest.fn().mockResolvedValue([sessionPayload]);
       (Session.find as jest.Mock).mockReturnValue({
-        lean: mockLean
+        lean: mockLean,
       });
 
       const result = await SessionService.findSessions({

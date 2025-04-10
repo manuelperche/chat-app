@@ -14,6 +14,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import AuthLogo from "../ui/AuthLogo";
+import axios from "axios";
 // import toast from "react-hot-toast";
 
 const SignUpPage = () => {
@@ -21,7 +22,7 @@ const SignUpPage = () => {
     fullName: string;
     email: string;
     password: string;
-    confirmPassword: string;
+    passwordConfirmation: string;
   };
 
   const schema = z
@@ -33,11 +34,11 @@ const SignUpPage = () => {
         .min(6, { message: "Password is too short" })
         .max(20, { message: "Password is too long" }),
 
-      confirmPassword: z.string(),
+      passwordConfirmation: z.string(),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((data) => data.password === data.passwordConfirmation, {
       message: "Passwords do not match",
-      path: ["confirmPassword"], // path of error
+      path: ["passwordConfirmation"], // path of error
     });
 
   //   const { signup, isSigningUp } = useAuthStore();
@@ -50,8 +51,19 @@ const SignUpPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const onSubmit = async (data: FormData) => {
+    try {
+      console.log(data);
+      const response = await axios.post(
+        `http://localhost:4000/api/users`,
+        data
+      );
+      console.log(response);
+
+      //TODO: show toast notification and navigate to login page
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -98,9 +110,9 @@ const SignUpPage = () => {
               label="Confirm Password"
               type="password"
               placeholder="Confirm Password"
-              name="confirmPassword"
+              name="passwordConfirmation"
               register={register}
-              error={errors.confirmPassword}
+              error={errors.passwordConfirmation}
               icon={<Lock className="size-5 text-base-content/40" />}
             />
 

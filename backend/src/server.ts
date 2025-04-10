@@ -13,7 +13,12 @@ export const createServer = (): Express => {
     .use(morgan("dev"))
     .use(urlencoded({ extended: true }))
     .use(json())
-    .use(cors())
+    .use(
+      cors({
+        credentials: true,
+        origin: "http://localhost:5173",
+      })
+    )
     .use(cookieParser());
 
   app.get("/ping", (_, res) => {
