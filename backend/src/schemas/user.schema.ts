@@ -25,3 +25,11 @@ export type CreateUserInput = Omit<
   TypeOf<typeof createUserSchema>,
   "body.passwordConfirmation"
 >;
+
+export const getUsersForSidebarSchema = object({
+  body: object({
+    userId: string(),
+  }),
+});
+
+export type GetUsersForSidebarInput = TypeOf<typeof getUsersForSidebarSchema>;

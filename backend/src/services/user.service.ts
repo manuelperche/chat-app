@@ -2,6 +2,7 @@ import { FilterQuery } from "mongoose";
 import { omit } from "lodash";
 import UserModel, { UserDocument, UserInput } from "../models/user.model";
 import cloudinary from "../utils/cloudinary";
+import { GetUsersForSidebarInput } from "../schemas/user.schema";
 
 export async function createUser(input: UserInput) {
   try {
@@ -37,6 +38,16 @@ export async function validatePassword({
 
 export async function findUser(query: FilterQuery<UserDocument>) {
   return UserModel.findOne(query).lean();
+}
+
+export async function findUsersForSidebar(input: GetUsersForSidebarInput) {
+  const loggedInUserId = input.body.userId;
+
+  const filteredUsers = await UserModel.find({
+    _id: { $ne: loggedInUserId },
+  }).select("-password");
+
+  return filteredUsers;
 }
 
 export async function updateUser(input: UserDocument) {

@@ -103,14 +103,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         profilePic: data,
       });
       set({ authUser: res.data });
-      console.log("data", {
-        ...get().authUser,
-        profilePic: data,
-      });
-      console.log("res", res.data);
       toast.success("Profile updated successfully");
     } catch (error: unknown) {
-      console.log("error in update profile:", error);
       toast.error((error as Error).message);
     } finally {
       set({ isUpdatingProfile: false });
