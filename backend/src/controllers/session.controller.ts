@@ -21,7 +21,7 @@ export async function login(req: Request, res: Response) {
 
   // create a session
   const session = await createSession(
-    user._id.toString(),
+    user._id?.toString() || "",
     req.get("user-agent") || ""
   );
 

@@ -7,6 +7,8 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
+import Navbar from "./components/Navbar";
+import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -23,6 +25,8 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <Navbar />
+
       <Routes>
         <Route
           path="/"
@@ -35,6 +39,10 @@ const App = () => {
         <Route
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
       </Routes>
 

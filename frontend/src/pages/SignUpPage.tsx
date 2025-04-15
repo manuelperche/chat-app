@@ -1,23 +1,15 @@
-// import { useState } from "react";
-// import { useAuthStore } from "../store/useAuthStore";
-import {
-  // Loader2,
-  Lock,
-  Mail,
-  User,
-} from "lucide-react";
-import { Link } from "react-router";
-
+import { Loader2, Lock, Mail, User } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 import AuthImagePattern from "../ui/AuthImagePatter";
 import FormField from "../components/FormField";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import AuthLogo from "../ui/AuthLogo";
-import axios from "axios";
-// import toast from "react-hot-toast";
+import { useAuthStore } from "../store/useAuthStore";
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
   type FormData = {
     fullName: string;
     email: string;
@@ -41,7 +33,7 @@ const SignUpPage = () => {
       path: ["passwordConfirmation"], // path of error
     });
 
-  //   const { signup, isSigningUp } = useAuthStore();
+  const { signup, isSigningUp } = useAuthStore();
 
   const {
     register,
@@ -53,14 +45,8 @@ const SignUpPage = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      console.log(data);
-      const response = await axios.post(
-        `http://localhost:4000/api/users`,
-        data
-      );
-      console.log(response);
-
-      //TODO: show toast notification and navigate to login page
+      await signup(data);
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
@@ -119,16 +105,16 @@ const SignUpPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              // disabled={isSigningUp}
+              disabled={isSigningUp}
             >
-              {/* {isSigningUp ? (
+              {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
                   Loading...
                 </>
               ) : (
                 "Create Account"
-              )} */}
+              )}
               Create Account
             </button>
           </form>

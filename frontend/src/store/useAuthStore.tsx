@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
-import { LoginFormData } from "../types.js";
+import { LoginFormData, SignUpFormData } from "../types.js";
 // import { io } from "socket.io-client";
 
 // const BASE_URL =
@@ -12,6 +12,8 @@ interface User {
   fullName: string;
   password: string;
   profilePic?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface AuthState {
@@ -23,15 +25,15 @@ interface AuthState {
   onlineUsers: string[];
   // socket: Socket | null;
   checkAuth: () => Promise<void>;
-  signup: (data: User) => Promise<void>;
+  signup: (data: SignUpFormData) => Promise<void>;
   login: (data: LoginFormData) => Promise<void>;
   logout: () => Promise<void>;
-  updateProfile: (data: User) => Promise<void>;
+  updateProfile: (data: string) => Promise<void>;
   //   connectSocket: () => void;
   //   disconnectSocket: () => void;
 }
 
-export const useAuthStore = create<AuthState>()((set) => ({
+export const useAuthStore = create<AuthState>()((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isLoggingIn: false,
@@ -43,7 +45,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/users/me");
-      console.log('checkAuth', res);
+      console.log("checkAuth", res);
       set({ authUser: res.data });
       //   get().connectSocket();
     } catch (error: unknown) {
@@ -57,8 +59,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/auth/signup", data);
-      set({ authUser: res.data });
+      await axiosInstance.post("/users", data);
       toast.success("Account created successfully");
       //   get().connectSocket();
     } catch (error: unknown) {
@@ -97,8 +98,16 @@ export const useAuthStore = create<AuthState>()((set) => ({
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
-      const res = await axiosInstance.put("/auth/update-profile", data);
+      const res = await axiosInstance.put("/users", {
+        ...get().authUser,
+        profilePic: data,
+      });
       set({ authUser: res.data });
+      console.log("data", {
+        ...get().authUser,
+        profilePic: data,
+      });
+      console.log("res", res.data);
       toast.success("Profile updated successfully");
     } catch (error: unknown) {
       console.log("error in update profile:", error);
