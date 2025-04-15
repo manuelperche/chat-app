@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { CreateUserInput } from "../schemas/user.schema";
-import { createUser, updateUser } from "../services/user.service";
+import { createUser, findUser, updateUser } from "../services/user.service";
 import logger from "../utils/logger";
+import { omit } from "lodash";
 
 export async function createUserHandler(
   req: Request<object, object, CreateUserInput["body"]>,
@@ -20,18 +21,15 @@ export async function createUserHandler(
 
 export async function getCurrentUser(req: Request, res: Response) {
   const user = res.locals.user;
-  
   if (!user) {
     return res.status(404).send("User not found");
   }
-  const sanitizedUser = { ...user };
-  delete sanitizedUser.password;
-  delete sanitizedUser.session;
-  delete sanitizedUser.exp;
-  delete sanitizedUser.iat;
-  
-  res.locals.user = sanitizedUser;
-  return res.send(res.locals.user);
+  const userRes = await findUser({ _id: user._id });
+  if (!userRes) {
+    return res.status(404).send("User not found");
+  }
+  const sanitizedUser = omit(userRes, ["password", "session", "exp", "iat"]);
+  return res.send(sanitizedUser);
 }
 
 export async function updateProfile(req: Request, res: Response) {
