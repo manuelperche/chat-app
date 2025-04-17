@@ -18,16 +18,19 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    text: {
+    content: {
       type: String,
+      required: true,
     },
     image: {
       type: String,
+      default: null,
+      required: false,
     },
   },
   { timestamps: true }
 );
 
-const Message = mongoose.model<MessageDocument>("Message", messageSchema);
+const MessageModel = mongoose.model<MessageDocument>("Message", messageSchema);
 
-export default Message;
+export default MessageModel;

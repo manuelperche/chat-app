@@ -21,6 +21,14 @@ export const createUserSchema = object({
   }),
 });
 
+export const updateProfileSchema = object({
+  body: object({
+    profilePic: string().optional(),
+  }),
+});
+
+export type UpdateProfileInput = TypeOf<typeof updateProfileSchema>;
+
 export type CreateUserInput = Omit<
   TypeOf<typeof createUserSchema>,
   "body.passwordConfirmation"

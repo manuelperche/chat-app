@@ -5,6 +5,7 @@ import cors from "cors";
 import userRouter from "./routes/user.route";
 import sessionRouter from "./routes/session.route";
 import cookieParser from "cookie-parser";
+import messageRouter from "./routes/message.route";
 
 export const createServer = (): Express => {
   const app = express();
@@ -28,6 +29,8 @@ export const createServer = (): Express => {
   app.use("/api/users", userRouter);
 
   app.use("/api/sessions", sessionRouter);
+
+  app.use("/api/messages", messageRouter);
 
   return app;
 };

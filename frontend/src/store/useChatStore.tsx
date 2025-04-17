@@ -11,9 +11,17 @@ interface User {
 
 interface Message {
   _id: string;
-  content: string;
   senderId: string;
   receiverId: string;
+  content: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface MessageInput {
+  content: string;
+  image: string;
 }
 
 interface ChatState {
@@ -24,8 +32,11 @@ interface ChatState {
   isMessagesLoading: boolean;
   getUsers: () => Promise<void>;
   setSelectedUser: (selectedUser: User) => void;
+  getMessages: (userId: string) => Promise<void>;
+  sendMessage: (messageData: MessageInput) => Promise<void>;
 }
-export const useChatStore = create<ChatState>()((set) => ({
+
+export const useChatStore = create<ChatState>()((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -44,29 +55,29 @@ export const useChatStore = create<ChatState>()((set) => ({
     }
   },
 
-  //   getMessages: async (userId) => {
-  //     set({ isMessagesLoading: true });
-  //     try {
-  //       const res = await axiosInstance.get(`/messages/${userId}`);
-  //       set({ messages: res.data });
-  //     } catch (error) {
-  //       toast.error(error.response.data.message);
-  //     } finally {
-  //       set({ isMessagesLoading: false });
-  //     }
-  //   },
-  //   sendMessage: async (messageData) => {
-  //     const { selectedUser, messages } = get();
-  //     try {
-  //       const res = await axiosInstance.post(
-  //         `/messages/send/${selectedUser._id}`,
-  //         messageData
-  //       );
-  //       set({ messages: [...messages, res.data] });
-  //     } catch (error) {
-  //       toast.error(error.response.data.message);
-  //     }
-  //   },
+  getMessages: async (userId: string) => {
+    set({ isMessagesLoading: true });
+    try {
+      const res = await axiosInstance.get(`/messages/${userId}`);
+      set({ messages: res.data });
+    } catch (error) {
+      toast.error((error as Error).message);
+    } finally {
+      set({ isMessagesLoading: false });
+    }
+  },
+  sendMessage: async (messageData: MessageInput) => {
+    const { selectedUser, messages } = get();
+    try {
+      const res = await axiosInstance.post(
+        `/messages/send/${selectedUser?._id}`,
+        messageData
+      );
+      set({ messages: [...messages, res.data] });
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
+  },
 
   //   subscribeToMessages: () => {
   //     const { selectedUser } = get();

@@ -8,6 +8,7 @@ import { LoginFormData, SignUpFormData } from "../types.js";
 //   import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
 interface User {
+  _id: string;
   email: string;
   fullName: string;
   password: string;
@@ -45,7 +46,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/users/me");
-      console.log("checkAuth", res);
       set({ authUser: res.data });
       //   get().connectSocket();
     } catch (error: unknown) {
@@ -61,7 +61,6 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       await axiosInstance.post("/users", data);
       toast.success("Account created successfully");
-      //   get().connectSocket();
     } catch (error: unknown) {
       toast.error((error as Error).message);
     } finally {
