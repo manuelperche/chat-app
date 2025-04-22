@@ -1,5 +1,7 @@
 import MessageModel from "../models/message.model";
 import cloudinary from "../utils/cloudinary";
+import { getReceiverSocketId } from "../utils/socket";
+import { io } from "../utils/socket";
 
 interface MessageInput {
   senderId: string;
@@ -38,10 +40,10 @@ export async function sendMessage(payload: MessageInput) {
 
     await newMessage.save();
 
-    // const receiverSocketId = getReceiverSocketId(receiverId);
-    // if (receiverSocketId) {
-    //   io.to(receiverSocketId).emit("newMessage", newMessage);
-    // }
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
   return newMessage;
 }
