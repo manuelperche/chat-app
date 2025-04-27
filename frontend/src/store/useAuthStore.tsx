@@ -4,10 +4,10 @@ import toast from "react-hot-toast";
 import { LoginFormData, SignUpFormData } from "../types.js";
 import { io, Socket } from "socket.io-client";
 
-// const BASE_URL =
-//   import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
-
-const BASE_URL = "http://localhost:4000";
+const BASE_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5001"
+    : import.meta.env.VITE_API_URL;
 
 interface User {
   _id: string;

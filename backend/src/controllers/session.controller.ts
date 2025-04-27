@@ -36,7 +36,8 @@ export async function login(req: Request, res: Response) {
   res.cookie("accessToken", accessToken, {
     maxAge: 900000, // 15 mins
     httpOnly: true,
-    domain: "localhost",
+    domain:
+      process.env.NODE_ENV === "development" ? "localhost" : process.env.DOMAIN,
     path: "/",
     sameSite: "strict",
     secure: false,
@@ -45,7 +46,8 @@ export async function login(req: Request, res: Response) {
   res.cookie("refreshToken", refreshToken, {
     maxAge: 3.154e10, // 1 year
     httpOnly: true,
-    domain: "localhost",
+    domain:
+      process.env.NODE_ENV === "development" ? "localhost" : process.env.DOMAIN,
     path: "/",
     sameSite: "strict",
     secure: false,

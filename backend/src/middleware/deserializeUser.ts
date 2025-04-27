@@ -7,7 +7,8 @@ const setAccessTokenCookie = (res: Response, token: string) => {
   res.cookie("accessToken", token, {
     maxAge: 900000, // 15 mins
     httpOnly: true,
-    domain: "localhost",
+    domain:
+      process.env.NODE_ENV === "development" ? "localhost" : process.env.DOMAIN,
     path: "/",
     sameSite: "strict",
     secure: false,
