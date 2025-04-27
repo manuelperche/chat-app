@@ -1,5 +1,10 @@
 chatapi.manuelperche.work {
     reverse_proxy backend:4000 {
-        header_down Strict-Transport-Security max-age=31536000;
+        header_down Strict-Transport-Security max-age=31536000
+        header_up X-Real-IP {remote_host}
+        # Add WebSocket support
+        header_up Host {host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
     }
 }

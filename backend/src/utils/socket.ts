@@ -13,6 +13,9 @@ const io = new Server(server, {
     origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
+  path: "/socket.io/",
+  transports: ["websocket", "polling"],
+  allowEIO3: true,
 });
 
 export function getReceiverSocketId(userId: string) {
