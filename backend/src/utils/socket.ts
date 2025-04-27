@@ -1,6 +1,9 @@
 import { Server } from "socket.io";
 import http from "http";
 import { createServer } from "../server";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = createServer();
 const server = http.createServer(app);
@@ -8,6 +11,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.CORS_ORIGIN,
+    credentials: true,
   },
 });
 

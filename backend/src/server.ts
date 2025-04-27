@@ -6,6 +6,9 @@ import userRouter from "./routes/user.route";
 import sessionRouter from "./routes/session.route";
 import cookieParser from "cookie-parser";
 import messageRouter from "./routes/message.route";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const createServer = (): Express => {
   const app = express();
@@ -16,8 +19,8 @@ export const createServer = (): Express => {
     .use(json({ limit: "1mb" }))
     .use(
       cors({
+        origin: process.env.CORS_ORIGIN,
         credentials: true,
-        origin: "http://localhost:5173",
       })
     )
     .use(cookieParser());

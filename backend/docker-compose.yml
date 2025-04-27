@@ -1,20 +1,37 @@
-version: '3.7'
-
 services:
   backend:
     container_name: backend
     restart: unless-stopped
     environment:
-      - NODE_ENV=${NODE_ENV}  
+      - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
       - MONGODB_URI=${MONGODB_URI}
       - PRIVATE_KEY=${PRIVATE_KEY}
       - PUBLIC_KEY=${PUBLIC_KEY}
       - ACCESS_TOKEN_TTL=${ACCESS_TOKEN_TTL}
       - REFRESH_TOKEN_TTL=${REFRESH_TOKEN_TTL}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN}
     build:
       context: ./
     ports:
       - ${PORT}:${PORT}
-      
- 
+
+  caddy:
+    image: caddy/caddy:2.2.1-alpine
+    container_name: caddy-service
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
