@@ -115,7 +115,6 @@ const SignUpPage = () => {
               ) : (
                 "Create Account"
               )}
-              Create Account
             </button>
           </form>
 
