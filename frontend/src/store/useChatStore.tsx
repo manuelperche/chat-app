@@ -31,7 +31,7 @@ interface ChatState {
   isUsersLoading: boolean;
   isMessagesLoading: boolean;
   getUsers: () => Promise<void>;
-  setSelectedUser: (selectedUser: User) => void;
+  setSelectedUser: (selectedUser: User | null) => void;
   getMessages: (userId: string) => Promise<void>;
   sendMessage: (messageData: MessageInput) => Promise<void>;
   subscribeToMessages: () => void;
@@ -103,5 +103,5 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     socket?.off("newMessage");
   },
 
-  setSelectedUser: (selectedUser: User) => set({ selectedUser }),
+  setSelectedUser: (selectedUser: User | null) => set({ selectedUser }),
 }));
