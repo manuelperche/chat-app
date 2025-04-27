@@ -7,7 +7,7 @@ import { io, Socket } from "socket.io-client";
 const BASE_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:5001"
-    : import.meta.env.VITE_API_URL;
+    : `${import.meta.env.VITE_API_URL}/api`;
 
 interface User {
   _id: string;
